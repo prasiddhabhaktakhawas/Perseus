@@ -1,0 +1,83 @@
+{% extends "microblogging/layout.html" %}
+{% load static %}
+
+{% block body %}
+{% if request.user.is_authenticated %}
+<form action='{% url 'index' %}' , method='post'>
+    {% csrf_token %}
+    <div class="newPost">
+        <div class="form-group">
+            <textarea class="form-control" id="newPostTextArea" name="newPost" rows="6"></textarea>
+            <input value="submit" type="submit" class="btn btn-primary" id="newPostSubmit">
+        </div>
+    </div>
+</form>
+{% endif %}
+
+<br>
+<h2> All Posts: </h2>
+<div class="allThePosts">
+    {% for post in page_obj %}
+    <div class="card" data-postid='{{post.pk}}'>
+        <div class="card-header">
+            {% if request.user == post.username %}
+            <button class="btn btn-success editButton" data-postId='{{post.pk}}'>Edit</button>
+            <button class="btn btn-danger deleteButton" data-postId='{{post.pk}}'>Delete</button>
+            {% endif %}
+            <a href="{% url 'profilepage' post.username.username %}">{{post.username.username}}</a>
+        </div>
+        {% if request.user == post.username %}
+        <div class="newPost" id='editPost{{post.pk}}' style='display:none'>
+            <div class="form-group">
+                <textarea class="form-control" id="newPostTextArea-{{post.pk}}" name="newPost"
+                    rows="6">{{post.postcontent}}</textarea>
+                <button class="btn btn-dark" id="newPostSubmit-{{post.pk}}">Edit Post</button>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card-body" id='Post{{post.pk}}'>
+            <h5 class="card-title" id="postContent-{{post.pk}}">{{post.postcontent}}</h5>
+            <p class="card-text">{{post.timestamp}}</p>
+            {% if request.user.is_authenticated %}
+            {% if request.user in post.likedBy.all %}
+            <button data-likes='{{post.likes}}' data-liked='true' class="btn btn-secondary like_unlike">Unike:
+                ({{post.likes}})</button>
+            {% else %}
+            <button data-likes='{{post.likes}}' data-liked='false' class="btn btn-primary like_unlike">Like:
+                ({{post.likes}})</button>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div><br>
+    {% endfor %}
+</div>
+
+<div class="container">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a href="?page=1" class="page-link">&laquo; First</a></li>
+        <li class="page-item"><a href="?page={{ page_obj.previous_page_number }}" class="page-link">Previous</a></li>
+        {% else %}
+        <li class="page-item disabled"><a class="page-link">&laquo; First</a></li>
+        <li class="page-item disabled"><a class="page-link">Previous</a></li>
+        {% endif %}
+
+
+        {% if page_obj.number %}
+        <li class="page-item"><a class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link">0</a></li>
+        {% endif %}
+        {% if page_obj.has_next %}
+        <li class="page-item"><a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a></li>
+        <li class="page-item"><a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">Last &raquo;</a></li>
+        {% else %}
+        <li class="page-item disabled"><a class="page-link">Next</a></li>
+        <li class="page-item disabled"><a class="page-link">Last &raquo;</a></li>
+        {% endif %}
+    </ul>
+</div>
+
+<script src="{% static 'microblogging/index.js' %}"></script>
+{% endblock %}
