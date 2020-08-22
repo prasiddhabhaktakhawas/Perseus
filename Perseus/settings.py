@@ -24,7 +24,7 @@ SECRET_KEY = os.environ.get('PERSEUS_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('PERSEUS_DEBUG_STATE') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('PERSEUS_ALLOWED_HOSTS')
+ALLOWED_HOSTS = [os.environ.get('PERSEUS_ALLOWED_HOSTS')]
 
 # Application definition
 
