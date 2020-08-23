@@ -19,7 +19,8 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'm3f)#6zg7+e70n99bhl9)))oja0a4@g&7k93^7$$o4ef()qb!k'
+
+# The Default SECRET_KEY Has been Changed to Something New In the Heroku Deployment, Config Var
 SECRET_KEY = os.environ.get('PERSEUS_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('PERSEUS_DEBUG_STATE') == 'True'
